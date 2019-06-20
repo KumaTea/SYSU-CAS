@@ -45,26 +45,30 @@ def login(username, password):
         '_eventId': 'submit',
         'geolocation': '',
     }
-    sysu_cas.post(cas_url, headers=headers, cookies=sysu_cas.cookies.get_dict(), data=login_data)
+    result = sysu_cas.post(cas_url, headers=headers, cookies=sysu_cas.cookies.get_dict(), data=login_data)
     # print(sysu_cas.cookies.get_dict())
-    return sysu_cas.cookies.get_dict()
-
-
-def test_status(cookies):
-    test_web = sysu_cas.get(cas_url, headers=headers, cookies=cookies, verify=False)
-    if user_name in test_web.text:
-        return True
+    if 'success' in result.text:
+        return sysu_cas.cookies.get_dict()
+    elif 'credential' in result.text:
+        return 'password'
     else:
-        return False
+        return 'captcha'
+
+
+def test_status(result):
+    if type(result) == dict:
+        print('Success!')
+    else:
+        if 'captcha' in result:
+            print('Maybe captcha is wrong.')
+        else:
+            print('Maybe password does not match.')
 
 
 if __name__ == '__main__':
     sysu_cas = requests.Session()
     user_name = input('Please input your NetID:\n')
     user_pass = getpass('Please input your password:\n')
-    login_cookies = login(user_name, user_pass)
-    if test_status(login_cookies):
-        print('Success!')
-    else:
-        print('Login Failed.')
+    login_result = login(user_name, user_pass)
+    test_status(login_result)
     sysu_cas.close()
