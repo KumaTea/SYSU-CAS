@@ -4,6 +4,7 @@ import requests
 import os
 from PIL import Image
 from bs4 import BeautifulSoup
+from getpass import getpass
 
 cas_url = 'https://cas.sysu.edu.cn/cas/login'
 captcha_url = 'https://cas.sysu.edu.cn/cas/captcha.jsp'
@@ -60,7 +61,7 @@ def test_status(cookies):
 if __name__ == '__main__':
     sysu_cas = requests.Session()
     user_name = input('Please input your NetID:\n')
-    user_pass = input('Please input your password:\n')
+    user_pass = getpass('Please input your password:\n')
     login_cookies = login(user_name, user_pass)
     if test_status(login_cookies):
         print('Success!')
