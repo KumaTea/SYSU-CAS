@@ -5,6 +5,29 @@ import json
 from PIL import Image
 from bs4 import BeautifulSoup
 from getpass import getpass
+import locale
+
+
+lang_code = locale.getdefaultlocale()[0]
+
+if 'en' in lang_code:
+    captcha_alert = 'Please input the code in this image:\n'
+    password_alert = 'Please input your password:\n'
+    username_alert = 'Please input your NetID:\n'
+    item_alert = 'Please input your '
+    login_ok = 'Login success!'
+    captcha_error = 'Maybe captcha is wrong.'
+    password_error = 'Maybe password does not match.'
+    success_word = 'success'
+else:
+    captcha_alert = '请输入验证码（不区分大小写）：\n'
+    password_alert = '请输入密码（不显示明文）：\n'
+    username_alert = '请输入NetID：\n'
+    item_alert = '请输入'
+    login_ok = '登录成功！'
+    captcha_error = '验证码可能出错，请重试。'
+    password_error = '密码可能出错，请重试。'
+    success_word = '成功'
 
 
 class CasLogin:
@@ -18,8 +41,6 @@ class CasLogin:
 
     def __init__(self):
         self.session = requests.Session()
-        self.username = get_item('username')
-        self.password = get_item('password')
 
     def get_xsrf(self):
         resp = self.session.get(self.cas_url, headers=self.headers, cookies=self.session.cookies.get_dict())
@@ -35,14 +56,14 @@ class CasLogin:
             ca.write(get_capt.content)
         with Image.open('temp/captcha.jpg') as captcha_image:
             captcha_image.show()
-        captcha_code = input('Please input the code in this image:\n')
+        captcha_code = input(captcha_alert)
         os.remove('temp/captcha.jpg')
         return captcha_code
 
     def login(self):
         login_data = {
-            'username': self.username,
-            'password': self.password,
+            'username': get_item('username'),
+            'password': get_item('password'),
             'captcha': self.get_captcha(),
             'execution': self.get_xsrf(),
             '_eventId': 'submit',
@@ -54,11 +75,11 @@ class CasLogin:
             cookies_file = self.session.cookies.get_dict()
         result = self.session.post(self.cas_url, headers=self.headers, cookies=cookies_file, data=login_data)
         # print(self.session.cookies.get_dict())
-        if 'success' in result.text:
+        if success_word in result.text:
             save_item('cookies', json.dumps(self.session.cookies.get_dict()))
             return self.session.cookies.get_dict()
         elif 'credential' in result.text:
-            login_fail()
+            login_fail(True)
             return 'password'
         else:
             login_fail()
@@ -77,20 +98,22 @@ class CasLogin:
 
     def main(self):
         if self.check_status():
-            return 'Already logged'
+            return 'success'
         else:
             login_result = self.login()
             return login_result
 
 
 def test_status(result):
-    if type(result) == dict or 'Already' in result:
-        print('Success!')
+    if type(result) == dict or 'success' in result:
+        print(login_ok)
+        return True
     else:
         if 'captcha' in result:
-            print('Maybe captcha is wrong.')
+            print(captcha_error)
         else:
-            print('Maybe password does not match.')
+            print(password_error)
+        return False
 
 
 def get_item(item, decode='base64', ext='txt'):
@@ -111,13 +134,13 @@ def get_item(item, decode='base64', ext='txt'):
         return read_file
 
     if item == 'password':
-        get_input = getpass('Please input your password:\n')
+        get_input = getpass(password_alert)
     elif item == 'username':
-        get_input = input('Please input your NetID:\n')
+        get_input = input(username_alert)
     elif item == 'cookies':
         return None
     else:
-        get_input = input('Please input your ' + item + ':\n')
+        get_input = input(item_alert + item + ':\n')
     save_item(item, get_input, 'base64')
     return get_input
 
@@ -148,9 +171,10 @@ def remove_item(name, ext='txt'):
     return True
 
 
-def login_fail():
-    remove_item('username')
-    remove_item('password')
+def login_fail(critical=False):
+    if critical:
+        remove_item('username')
+        remove_item('password')
     remove_item('cookies')
     return True
 
