@@ -1,2 +1,5 @@
 .pytest_cache
 .idea
+username.txt
+password.txt
+cookies.txt
