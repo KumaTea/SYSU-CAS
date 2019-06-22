@@ -31,6 +31,11 @@ else:
 
 
 class CasLogin:
+    """
+    CasLogin
+    CasLogin.main() --> CasLogin.login()
+    CasLogin.terminate()
+    """
     cas_url = 'https://cas.sysu.edu.cn/cas/login'
     captcha_url = 'https://cas.sysu.edu.cn/cas/captcha.jsp'
     headers = {
@@ -40,6 +45,7 @@ class CasLogin:
     }
 
     def __init__(self):
+        """self.session = requests.Session()"""
         self.session = requests.Session()
 
     def get_xsrf(self):
