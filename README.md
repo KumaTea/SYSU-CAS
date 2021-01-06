@@ -1,7 +1,17 @@
 # SYSU-CAS
-Login to CAS system of SYSU via Python
+Automatically Login to CAS system of SYSU
 
-## Example
+## [Javascript](CasLogin.js)
+### Greasy Fork
+**[中大自动验证码认证][1]**
+
+[SYSU CAS Auto Captcha Login][2]
+
+* Using [Tesseract.js][4] ([GitHub][5])
+* Note: you'll download [data about 11M][3] for the first run.
+
+## Python
+### Example
 (See [example.py](./example.py))
 ```python
 from CasLogin import CasLogin, test_status
@@ -25,3 +35,9 @@ if __name__ == '__main__':
     login_cas.terminate()
     # Stop session, optional.
 ```
+
+[1]: https://greasyfork.org/zh-CN/scripts/419757
+[2]: https://greasyfork.org/en/scripts/419757
+[3]: https://tessdata.projectnaptha.com/4.0.0/eng.traineddata.gz
+[4]: https://tesseract.projectnaptha.com
+[5]: https://github.com/naptha/tesseract.js
