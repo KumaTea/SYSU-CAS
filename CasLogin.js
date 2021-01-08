@@ -5,7 +5,7 @@
 // @namespace          https://github.com/KumaTea
 // @namespace          https://greasyfork.org/en/users/169784-kumatea
 // @homepage           https://github.com/KumaTea/SYSU-CAS
-// @version            0.1.2.0
+// @version            0.1.2.1
 // @description        中山大学身份验证系统自动识别验证码登录
 // @description:en     Automatic Script for Solving captcha of CAS (Central Authentication Service) of Sun Yat-sen University
 // @description:zh     中山大学身份验证系统自动识别验证码登录
@@ -22,7 +22,6 @@
 // "use strict";
 
 const captcha_regex = /[A-Za-z0-9]/g;
-sweetAlert("正在加载识别组件……", {buttons: false, timer: 3000,});
 console.log("Fetching: https://tessdata.projectnaptha.com/4.0.0/eng.traineddata.gz")
 
 function react_input(component, value) {
@@ -40,10 +39,11 @@ function react_input(component, value) {
   component.dispatchEvent(event);
 }
 
-react_input(document.getElementById("captcha"), "正在加载识别组件，请耐心等待……");
-
 async function solve() {
   if (document.getElementById("captcha")) {
+    sweetAlert("正在加载识别组件……", {buttons: false, timer: 3000,});
+    react_input(document.getElementById("captcha"), "正在加载识别组件，请耐心等待……");
+    
     let result = "";
     while (result.length !== 4) {
         await Tesseract.recognize(document.captchaImg, "eng").then(({ data: { text } }) => {result = text.match(captcha_regex).join("");});

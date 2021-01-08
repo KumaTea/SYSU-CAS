@@ -7,6 +7,8 @@ Automatically Login to CAS system of SYSU
 
 [SYSU CAS Auto Captcha Login][2]
 
+![demo](img/demo.gif)
+
 * Using [Tesseract.js][4] ([GitHub][5])
 * Note: you'll download [data about 11M][3] for the first run.
 
