@@ -10,7 +10,7 @@ Automatically Login to CAS system of SYSU
 ![demo](img/demo.gif)
 
 * Using [Tesseract.js][4] ([GitHub][5])
-* Note: you'll download [data about 11M][3] for the first run.
+* Note: you'll download [data about 11M][3] at the first run.
 
 ## Python
 ### Example

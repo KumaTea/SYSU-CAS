@@ -39,7 +39,7 @@ class CasLogin:
     cas_url = 'https://cas.sysu.edu.cn/cas/login'
     captcha_url = 'https://cas.sysu.edu.cn/cas/captcha.jsp'
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
         # 'Host': 'cas.sysu.edu.cn',
         # 'Referer': 'https://cas.sysu.edu.cn/',
     }

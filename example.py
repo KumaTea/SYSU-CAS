@@ -1,7 +1,7 @@
 from CasLogin import CasLogin, test_status
 
-uems_url = 'https://uems.sysu.edu.cn/jwxt/api/sso/cas/login?pattern=student-login'
-stu_info_url = 'https://uems.sysu.edu.cn/jwxt/student-status/student-info/detail'
+uems_url = 'https://jwxt.sysu.edu.cn/jwxt/api/sso/cas/login?pattern=student-login'
+stu_info_url = 'https://jwxt.sysu.edu.cn/jwxt/student-status/countrystu/studentRollView'
 login_status = False # Initialize
 
 
