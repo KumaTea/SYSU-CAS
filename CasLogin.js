@@ -5,13 +5,14 @@
 // @namespace          https://github.com/KumaTea
 // @namespace          https://greasyfork.org/en/users/169784-kumatea
 // @homepage           https://github.com/KumaTea/SYSU-CAS
-// @version            0.1.2.3
+// @version            0.1.2.4
 // @description        中山大学身份验证系统自动识别验证码登录
 // @description:en     Automatic Script for Solving captcha of CAS (Central Authentication Service) of Sun Yat-sen University
 // @description:zh     中山大学身份验证系统自动识别验证码登录
 // @description:zh-cn  中山大学身份验证系统自动识别验证码登录
 // @author             KumaTea
 // @match              https://cas.sysu.edu.cn/cas/login*
+// @match              https://cas-443.webvpn.sysu.edu.cn/cas/login*
 // @license            MIT
 // @require            https://unpkg.com/tesseract.js@v2.1.1/dist/tesseract.min.js
 // @require            https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js
