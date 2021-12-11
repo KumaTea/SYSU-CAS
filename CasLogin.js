@@ -5,7 +5,7 @@
 // @namespace          https://github.com/KumaTea
 // @namespace          https://greasyfork.org/en/users/169784-kumatea
 // @homepage           https://github.com/KumaTea/SYSU-CAS
-// @version            0.1.2.4
+// @version            1.0.0.0
 // @description        中山大学身份验证系统自动识别验证码登录
 // @description:en     Automatic Script for Solving captcha of CAS (Central Authentication Service) of Sun Yat-sen University
 // @description:zh     中山大学身份验证系统自动识别验证码登录
@@ -14,16 +14,25 @@
 // @match              https://cas.sysu.edu.cn/cas/login*
 // @match              https://cas-443.webvpn.sysu.edu.cn/cas/login*
 // @license            MIT
-// @require            https://unpkg.com/tesseract.js@v2.1.1/dist/tesseract.min.js
-// @require            https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js
+// @require            https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js
+// @require            https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.all.min.js
 // ==/UserScript==
 
 
 /* jshint esversion: 8 */
 // "use strict";
 
+const delay = 2000;
 const captcha_regex = /[A-Za-z0-9]/g;
+const black_threshold = 50;
+const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
 console.log("Fetching: https://tessdata.projectnaptha.com/4.0.0/eng.traineddata.gz")
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 function react_input(component, value) {
   // Credit: https://github.com/facebook/react/issues/11488#issuecomment-347775628
@@ -40,25 +49,85 @@ function react_input(component, value) {
   component.dispatchEvent(event);
 }
 
+
+function load_js(src) {
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = src;
+  document.head.appendChild(script);
+}
+
+
+function replace_color_in_canvas(canvas) {
+  let ctx = canvas.getContext("2d");
+  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  let data = imageData.data;
+  let len = data.length / 3;
+  let first_pixel_array = [data[0], data[1], data[2]];
+  for (let i = 0; i < len; i += 1) {
+    let r = data[i * 3];
+    let g = data[i * 3 + 1];
+    let b = data[i * 3 + 2];
+    if (r + g < black_threshold || r + b < black_threshold || g + b < black_threshold) {
+      data[i*3] = first_pixel_array[0];
+      data[i*3 + 1] = first_pixel_array[1];
+      data[i*3 + 2] = first_pixel_array[2];
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+  return ctx;
+}
+
+
+function img_src_to_base64(img) {
+  // Ref: https://stackoverflow.com/a/22172860/10714490
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  ctx = replace_color_in_canvas(ctx.canvas);
+  return ctx.canvas.toDataURL("image/png");
+}
+
+
+function clone_image(img) {
+  let new_img = document.createElement("img");
+  new_img.src = img_src_to_base64(img)
+  return new_img;
+}
+
+
+async function recognize() {
+  let result = "";
+  await Tesseract.recognize(clone_image(document.getElementById('captchaImg')), "eng")
+      .then(({ data: { text } }) => {result = text.match(captcha_regex).join("");});
+  console.log("Recognized: " + result);
+  return result;
+}
+
+
 async function solve() {
   if (document.getElementById("captcha")) {
-    sweetAlert("正在加载识别组件……", {buttons: false, timer: 3000,});
+    Swal.fire({title: "正在加载识别组件……", showConfirmButton: false, timer: 3000});
     react_input(document.getElementById("captcha"), "正在加载识别组件，请耐心等待……");
-    
-    let result = "";
-    while (result.length !== 4) {
-        await Tesseract.recognize(document.captchaImg, "eng").then(({ data: { text } }) => {result = text.match(captcha_regex).join("");});
-        console.log("Recognized: " + result);
-        react_input(document.getElementById("captcha"), result);
+
+    let result = await recognize();
+    react_input(document.getElementById("captcha"), result);
+
+    if (result.length !== 4) {
+      location.reload();
     }
+
     console.log("Submitting: " + result);
-    if (!document.querySelector("input.btn.btn-submit.btn-block").disabled) {
-      document.querySelector("input.btn.btn-submit.btn-block").click();
-    } else {
-      console.log("No username!");
-      sweetAlert("无用户名", "您尚未输入用户名");
-    }
+
+    while (document.querySelector("input.btn.btn-submit.btn-block").disabled) {
+        console.log("Login button is not clickable!");
+        Swal.fire({title: "请点击网页以激活登录按钮", showConfirmButton: false, timer: 1000});
+        await sleep(delay);
+      }
+    document.querySelector("input.btn.btn-submit.btn-block").click();
   }
 }
 
-solve();
+solve().then();

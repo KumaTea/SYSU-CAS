@@ -7,10 +7,17 @@ Automatically Login to CAS system of SYSU
 
 [SYSU CAS Auto Captcha Login][2]
 
+#### Updates
+
+添加了去除干扰线的功能，大幅提升验证码识别正确率。
+
+![Remove interference line](img/rmln.jpg)
+
+---
+
 ![demo](img/demo.gif)
 
 * Using [Tesseract.js][4] ([GitHub][5])
-  * Using v2.1.0 - v2.1.1: newer versions (v2.1.2+) causes errors
 * Note: you'll download [data about 11M][3] at the first run.
 
 ## Python
