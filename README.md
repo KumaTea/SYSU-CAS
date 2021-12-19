@@ -9,9 +9,8 @@ Automatically Login to CAS system of SYSU
 
 #### Updates
 
-添加了去除干扰线的功能，大幅提升验证码识别正确率。
-
-![Remove interference line](img/rmln.jpg)
+* 2021-12-20: 换用 gitee 及 cnpmjs 以显著提升加载速度 <br> 默认使用精简数据
+* 2021-12-12: 添加了去除干扰线的功能，大幅提升验证码识别正确率。 <br><br> ![Remove interference line](img/rmln.jpg)
 
 ---
 

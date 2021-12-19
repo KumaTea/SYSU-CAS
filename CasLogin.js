@@ -5,7 +5,7 @@
 // @namespace          https://github.com/KumaTea
 // @namespace          https://greasyfork.org/en/users/169784-kumatea
 // @homepage           https://github.com/KumaTea/SYSU-CAS
-// @version            1.0.0.0
+// @version            1.1.0.0
 // @description        中山大学身份验证系统自动识别验证码登录
 // @description:en     Automatic Script for Solving captcha of CAS (Central Authentication Service) of Sun Yat-sen University
 // @description:zh     中山大学身份验证系统自动识别验证码登录
@@ -14,9 +14,22 @@
 // @match              https://cas.sysu.edu.cn/cas/login*
 // @match              https://cas-443.webvpn.sysu.edu.cn/cas/login*
 // @license            MIT
-// @require            https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js
+// @require            https://gitee.com/kumatea/tesseract-dist/raw/master/2.1.5/tesseract-fast.min.js
 // @require            https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.all.min.js
 // ==/UserScript==
+
+/*
+Use fast trained data (1.89 MB) by default.
+If you want to use the better trained data (10.4 MB),
+replace the "tesseract-fast.min.js" with "tesseract.min.js"
+in the '@require' section above.
+There is also a best version: "tesseract-best.min.js".
+
+默认使用精简训练数据（1.89 MB）。
+如果你想使用标准训练数据（10.4 MB），在上面的 '@require' 部分
+把 "tesseract-fast.min.js" 替换为 "tesseract.min.js"。
+另有一个最佳版本："tesseract-best.min.js"。
+ */
 
 
 /* jshint esversion: 8 */
@@ -25,8 +38,7 @@
 const delay = 2000;
 const captcha_regex = /[A-Za-z0-9]/g;
 const black_threshold = 50;
-const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
-console.log("Fetching: https://tessdata.projectnaptha.com/4.0.0/eng.traineddata.gz")
+console.log("Fetching: https://raw.github.cnpmjs.org/naptha/tessdata/gh-pages/4.0.0_fast/eng.traineddata.gz")
 
 
 function sleep(ms) {
