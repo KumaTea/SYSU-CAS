@@ -14,11 +14,15 @@
 // @match              https://cas.sysu.edu.cn/cas/login*
 // @match              https://cas-443.webvpn.sysu.edu.cn/cas/login*
 // @license            MIT
-// @require            https://gitee.com/kumatea/tesseract-dist/raw/master/2.1.5/tesseract-fast.min.js
+// @require            https://greasyfork.org/scripts/437298-tesseract-fast-min-js/code/tesseract-fastminjs.js
 // @require            https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.all.min.js
 // ==/UserScript==
 
 /*
+Whoa! You found here!
+Please replace "tesseract-fastminjs.js" with this link before reading the following instructions:
+https://gitee.com/kumatea/tesseract-dist/raw/master/2.1.5/tesseract-fast.min.js
+
 Use fast trained data (1.89 MB) by default.
 If you want to use the better trained data (10.4 MB),
 replace the "tesseract-fast.min.js" with "tesseract.min.js"
