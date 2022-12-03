@@ -5,7 +5,7 @@
 // @namespace          https://github.com/KumaTea
 // @namespace          https://greasyfork.org/en/users/169784-kumatea
 // @homepage           https://github.com/KumaTea/SYSU-CAS
-// @version            1.1.0.0
+// @version            1.2.0.0
 // @description        中山大学身份验证系统自动识别验证码登录
 // @description:en     Automatic Script for Solving captcha of CAS (Central Authentication Service) of Sun Yat-sen University
 // @description:zh     中山大学身份验证系统自动识别验证码登录
@@ -13,10 +13,19 @@
 // @author             KumaTea
 // @match              https://cas.sysu.edu.cn/cas/login*
 // @match              https://cas-443.webvpn.sysu.edu.cn/cas/login*
-// @license            MIT
+// @license            GPLv3
 // @require            https://greasyfork.org/scripts/437298-tesseract-fast-min-js/code/tesseract-fastminjs.js
 // @require            https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.all.min.js
 // ==/UserScript==
+
+/*
+为省去手动激活页面的操作
+请在此输入您的 NetID 账号密码
+此操作不会上传任何信息
+*/
+
+const username = '';
+const password = '';
 
 /*
 Whoa! You found here!
@@ -39,7 +48,8 @@ There is also a best version: "tesseract-best.min.js".
 /* jshint esversion: 8 */
 // "use strict";
 
-const delay = 2000;
+
+const delay = 2*1000;
 const captcha_regex = /[A-Za-z0-9]/g;
 const black_threshold = 50;
 console.log("Fetching: https://raw.github.cnpmjs.org/naptha/tessdata/gh-pages/4.0.0_fast/eng.traineddata.gz")
@@ -47,6 +57,18 @@ console.log("Fetching: https://raw.github.cnpmjs.org/naptha/tessdata/gh-pages/4.
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+function simulateMouseClick(element) {
+  // https://stackoverflow.com/a/54316368
+  // https://stackoverflow.com/a/69977098
+  mouseClickEvents.forEach(mouseEventType =>
+    element.dispatchEvent(
+      new MouseEvent(mouseEventType)
+    )
+  );
 }
 
 
@@ -137,13 +159,22 @@ async function solve() {
 
     console.log("Submitting: " + result);
 
-    while (document.querySelector("input.btn.btn-submit.btn-block").disabled) {
-        console.log("Login button is not clickable!");
-        Swal.fire({title: "请点击网页以激活登录按钮", showConfirmButton: false, timer: 1000});
-        await sleep(delay);
+    if (document.querySelector("input.btn.btn-submit.btn-block").disabled) {
+      if (username && password) {
+        react_input(document.getElementById("username"), username);
+        react_input(document.getElementById("password"), password);
+      } else {
+        while (document.querySelector("input.btn.btn-submit.btn-block").disabled) {
+          console.log("Login button is not clickable!");
+          Swal.fire({title: "请点击网页以激活登录按钮", showConfirmButton: false, timer: 1000});
+          await sleep(delay);
+        }
       }
+    }
+
     document.querySelector("input.btn.btn-submit.btn-block").click();
+    // simulateMouseClick(document.querySelector("input.btn.btn-submit.btn-block"));
   }
 }
 
-solve().then();
+solve();
