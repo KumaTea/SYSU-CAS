@@ -9,6 +9,7 @@ Automatically Login to CAS system of SYSU
 
 #### Updates
 
+* 2022-12-03: 现在可以通过在代码里填入密码以省去激活按钮的步骤 <br> [为什么之前必须点一下鼠标？][6]
 * 2021-12-20: <br> 换用 gitee 及 cnpmjs 以显著提升加载速度 <br> 默认使用精简数据
 * 2021-12-12: 添加了去除干扰线的功能，大幅提升验证码识别正确率。 <br><br> ![Remove interference line](img/rmln.jpg)
 
@@ -50,3 +51,4 @@ if __name__ == '__main__':
 [3]: https://tessdata.projectnaptha.com/4.0.0/eng.traineddata.gz
 [4]: https://tesseract.projectnaptha.com
 [5]: https://github.com/naptha/tesseract.js
+[6]: https://stackoverflow.com/questions/46268851
